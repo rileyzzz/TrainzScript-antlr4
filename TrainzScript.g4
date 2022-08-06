@@ -295,8 +295,15 @@ trailingTypeSpecifierSeq:
 	trailingTypeSpecifier+;
 
 simpleTypeSpecifier:
-	(className
-	| BUILTIN_TYPENAME)
+	(
+	//BUILTIN_TYPENAME 
+	'int'
+	| 'float'
+	| 'bool'
+	| 'string'
+	| 'void'
+	| 'object'
+	| className)
 	arraySpecifier?;
 
 arraySpecifier: '[' ']';
