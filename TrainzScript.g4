@@ -125,6 +125,7 @@ expression: assignmentExpression (',' assignmentExpression)*;
 // constantExpression: conditionalExpression;
 constantExpression: logicalOrExpression;
 
+
 assignmentOperator:
 	'='
 	// no assignment operators in trainzscript :(
@@ -253,9 +254,8 @@ accessSpecifier:
 declSpecifier:
 	accessSpecifier
 	| 'define'
-	| simpleTypeSpecifier
 	| functionSpecifier
-
+	| simpleTypeSpecifier
 	// | Friend
 	// | Typedef
 	// | Constexpr
@@ -293,35 +293,31 @@ trailingTypeSpecifierSeq:
 	trailingTypeSpecifier+;
 
 simpleTypeSpecifier:
-	(theTypeName
+	(className
 	| BUILTIN_TYPENAME)
-	('[' ']')?;
+	arraySpecifier?;
 
-theTypeName:
-	className
-	// | enumName
-	// | typedefName
-	;
+arraySpecifier: '[' ']';
 
 // declarators
 initDeclaratorList: initDeclarator (',' initDeclarator)*;
 
 initDeclarator: declarator initializer?;
 
-declarator:
-	// pointerDeclarator |
-	noPointerDeclarator;
 
 // pointerDeclarator: (pointerOperator Const?)* noPointerDeclarator;
 
-noPointerDeclarator:
+declarator:
 	declaratorid
-	// | noPointerDeclarator (
-	// 	parametersAndQualifiers
-	// 	| LeftBracket constantExpression? RightBracket attributeSpecifierSeq?
-	// )
+	| declarator (
+		parameters
+		// | LeftBracket constantExpression? RightBracket attributeSpecifierSeq?
+	)
 	// | LeftParen pointerDeclarator RightParen
 	;
+
+parameters:
+	'(' parameterDeclarationClause? ')';
 
 declaratorid: idExpression;
 
@@ -343,7 +339,8 @@ parameterDeclaration:
 	);
 
 functionDefinition:
-	declSpecifierSeq? declarator functionBody;
+	(declSpecifierSeq? declarator functionBody)
+	;
 
 functionBody:
 	// no constructor initializers in TrainzScript
@@ -370,7 +367,7 @@ initializerList:
 className: IDENTIFIER;
 
 classSpecifier:
-	classPreSpecifier* classHead '{' memberSpecification? '}' ';';
+	classPreSpecifierSeq? classHead '{' memberSpecification? '}' ';';
 
 classSpecifierSeq:
 	classSpecifier+;
@@ -378,6 +375,9 @@ classSpecifierSeq:
 classPreSpecifier:
 	'static'
 	| 'game';
+
+classPreSpecifierSeq:
+	classPreSpecifier+;
 
 classHead:
 	'class' (
@@ -403,7 +403,10 @@ memberDeclaratorList:
 	memberDeclarator (',' memberDeclarator)*;
 
 memberDeclarator:
-	declarator
+	declarator (
+		//virtualSpecifierSeq? pureSpecifier?
+		initializer?
+	)
 	// no bitfields in TrainzScript
 	// | Identifier? attributeSpecifierSeq? Colon constantExpression
 	;
