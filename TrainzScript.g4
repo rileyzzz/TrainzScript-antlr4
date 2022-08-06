@@ -151,6 +151,7 @@ statement:
 		| compoundStatement
 		| selectionStatement
 		| iterationStatement
+		| waitStatement
 		| jumpStatement
 		// | tryBlock
 	);
@@ -161,7 +162,7 @@ labeledStatement:
 		IDENTIFIER
 		| 'case' constantExpression
 		| 'default'
-		| 'on' STRING_LITERAL ',' STRING_LITERAL
+		| 'on' STRING_LITERAL ',' STRING_LITERAL (',' constantExpression)?
 	) ':' statement;
 
 expressionStatement: expression? ';';
@@ -200,6 +201,11 @@ forInitStatement:
 	;
 // forRangeDeclaration:
 // 	attributeSpecifierSeq? declSpecifierSeq declarator;
+
+waitStatement:
+	// must be compound
+	'wait' '(' ')' compoundStatement
+	;
 
 jumpStatement:
 	(
@@ -269,12 +275,12 @@ functionSpecifier:
 	| 'legacy_compatibility'
 	;
 
-typeSpecifier:
-	trailingTypeSpecifier
-	| classSpecifier
-	// no enums in trainzscript :(
-	// | enumSpecifier
-	;
+// typeSpecifier:
+// 	trailingTypeSpecifier
+// 	| classSpecifier
+// 	// no enums in trainzscript :(
+// 	// | enumSpecifier
+// 	;
 
 trailingTypeSpecifier:
 	simpleTypeSpecifier
@@ -283,7 +289,7 @@ trailingTypeSpecifier:
 	// | cvQualifier
 	;
 
-typeSpecifierSeq: typeSpecifier+;
+// typeSpecifierSeq: typeSpecifier+;
 
 trailingTypeSpecifierSeq:
 	trailingTypeSpecifier+;
@@ -327,7 +333,8 @@ parameterDeclarationList:
 
 parameterDeclaration:
 	declSpecifierSeq (
-		declarator
+		// void as an argument
+		declarator?
 		// no default initializers in TrainzScript :(
 		// declarator (
 		// 	'=' initializerClause
