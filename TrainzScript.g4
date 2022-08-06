@@ -17,12 +17,8 @@ primaryExpression
 	| idExpression;
 
 
-idExpression: unqualifiedId;
+idExpression: IDENTIFIER;
 
-unqualifiedId: IDENTIFIER;
-
-// qualifiedId: nameSpecifier unqualifiedId;
-// nameSpecifier: IDENTIFIER;
 
 postfixExpression:
 	primaryExpression
