@@ -138,8 +138,8 @@ assignmentOperator:
 	;
 
 rangeIndexer:
-	(expression ',' expression?
-	| expression? ',' expression);
+	(expression ',' expression?)
+	| (expression? ',' expression);
 
 // statements
 
